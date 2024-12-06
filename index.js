@@ -32,11 +32,17 @@ async function run() {
 
         const database = client.db('CineNestDb');
         const movieCollection = database.collection('movies');
+        const favoriteMovieCollection = database.collection('favorite-movies');
 
         app.post('/add-movie',async(req,res)=>{
             const movie = req.body;
-            console.log(movie);
             const result = await movieCollection.insertOne(movie);
+            res.send(result);
+        })
+
+        app.post('/add-favorite-movie',async(req,res)=>{
+            const favMovie = req.body;
+            const result = await favoriteMovieCollection.insertOne(favMovie);
             res.send(result);
         })
 
@@ -50,6 +56,29 @@ async function run() {
         app.get('/all-movies',async(req,res)=>{
             const cursor = movieCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.get('/favorite-movies',async(req,res)=>{
+            const cursor = favoriteMovieCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // get single movie 
+        app.get('/all-movies/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+
+            const result = await movieCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.delete('/all-movies/:id',async(req,res)=>{
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)};
+
+            const result = await movieCollection.deleteOne(filter);
             res.send(result);
         })
 
