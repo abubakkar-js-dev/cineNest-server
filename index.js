@@ -56,7 +56,12 @@ async function run() {
     });
 
     app.get("/all-movies", async (req, res) => {
-      const cursor = movieCollection.find();
+      const {searchParams} = req.query;
+      let filter = {};
+      if(searchParams){
+        filter = {title: {$regex: searchParams, $options: 'i'}};
+      }
+      const cursor = movieCollection.find(filter);
       const result = await cursor.toArray();
       res.send(result);
     });
