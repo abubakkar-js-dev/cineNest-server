@@ -11,8 +11,9 @@ app.use(cors());
 
 app.use(express.json());
 
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y24v7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-const uri = "mongodb://localhost:27017";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y24v7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+
+// const uri = "mongodb://localhost:27017";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -35,6 +36,7 @@ async function run() {
     const database = client.db("CineNestDb");
     const movieCollection = database.collection("movies");
     const favoriteMovieCollection = database.collection("favorite-movies");
+
 
     app.post("/add-movie", async (req, res) => {
       const movie = req.body;
